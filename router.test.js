@@ -40,4 +40,8 @@ describe("GET /items/:name", function() {
         expect(resp.statusCode).toBe(200);
         expect(resp.body).toEqual(mcn)
     })
+    test("404s on bad request", async function() {
+        const resp = await request(router).get("/items/qwertyuiop")
+        expect(resp.statusCode).toBe(404)
+    })
 })
