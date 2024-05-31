@@ -31,6 +31,10 @@ describe("POST /items", function(){
             .send(vanilla);
         expect(resp.statusCode).toBe(201);
         expect(resp.body).toEqual({added: vanilla})
+        
+        const resp2 = await request(router).get("/items")
+        expect(resp2.statusCode).toBe(200)
+        expect(resp2.body).toEqual({items: [mcn, vanilla]})
     })
 })
 
@@ -48,11 +52,16 @@ describe("GET /items/:name", function() {
 
 describe("PATCH /items/:name", function() {
     test("Patches name", async function() {
+        const testName = "mocha"
         const resp = await request(router)
             .patch(`/items/${mcn.name}`)
-            .send({name : "mocha"})
+            .send({name : testName})
         expect(resp.statusCode).toBe(200);
-        expect(resp.body).toEqual({updated : {name : "mocha", price: mcn.price}})
+        expect(resp.body).toEqual({updated : {name : testName, price: mcn.price}})
+        
+        const resp2 = await request(router).get(`/items/${testName}`)
+        expect(resp2.statusCode).toBe(200)
+        expect(resp2.body).toEqual({name : testName, price: mcn.price})
     })
     test("Patches price", async function() {
         const resp = await request(router)
@@ -60,6 +69,22 @@ describe("PATCH /items/:name", function() {
             .send({price : 6.95})
         expect(resp.statusCode).toBe(200);
         expect(resp.body).toEqual({updated : {name : mcn.name, price: 6.95}})
+    })
+    test("404s on bad request", async function() {
+        const resp = await request(router).get("/items/qwertyuiop")
+        expect(resp.statusCode).toBe(404)
+    })
+})
+
+describe("DELETE /items/:name", function() {
+    test("Deletes item", async function() {
+        const resp = await request(router).delete(`/items/${mcn.name}`)
+        expect(resp.statusCode).toBe(200)
+        expect(resp.body).toEqual({message:"Deleted"})
+        
+        const resp2 = await request(router).get("/items")
+        expect(resp2.statusCode).toBe(200)
+        expect(resp2.body).toEqual({items: []})
     })
     test("404s on bad request", async function() {
         const resp = await request(router).get("/items/qwertyuiop")
