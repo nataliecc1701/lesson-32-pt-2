@@ -45,3 +45,24 @@ describe("GET /items/:name", function() {
         expect(resp.statusCode).toBe(404)
     })
 })
+
+describe("PATCH /items/:name", function() {
+    test("Patches name", async function() {
+        const resp = await request(router)
+            .patch(`/items/${mcn.name}`)
+            .send({name : "mocha"})
+        expect(resp.statusCode).toBe(200);
+        expect(resp.body).toEqual({updated : {name : "mocha", price: mcn.price}})
+    })
+    test("Patches price", async function() {
+        const resp = await request(router)
+            .patch(`/items/${mcn.name}`)
+            .send({price : 6.95})
+        expect(resp.statusCode).toBe(200);
+        expect(resp.body).toEqual({updated : {name : mcn.name, price: 6.95}})
+    })
+    test("404s on bad request", async function() {
+        const resp = await request(router).get("/items/qwertyuiop")
+        expect(resp.statusCode).toBe(404)
+    })
+})
