@@ -22,3 +22,14 @@ describe("GET /items", function(){
         expect(resp.body).toEqual({items: [mcn]})
     })
 })
+
+describe("POST /items", function(){
+    test("Adds an item to the list", async function(){
+        const vanilla = {name : "vanilla extract", price : 9.99}
+        const resp = await request(router)
+            .post("/items")
+            .send(vanilla);
+        expect(resp.statusCode).toBe(201);
+        expect(resp.body).toEqual({added: vanilla})
+    })
+})
