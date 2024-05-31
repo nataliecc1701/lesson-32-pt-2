@@ -54,4 +54,26 @@ router.delete("/:name", function(request, response) {
     return response.json({message: "Deleted"})
 })
 
+/**
+ * 
+ * ERROR HANDLERS
+ * 
+*/
+
+// 404 handler
+router.use(function(req, res, next) {
+    const notFoundError = new ExpressError("Not found", 404);
+    return next(notFoundError)
+})
+
+// general purpose error handler
+router.use(function(err, req, res, next) {
+    const status = err.status || 500
+    const message = err.message
+    
+    res.status(status).json({
+        error : {message, status}
+    })
+})
+
 module.exports = router
