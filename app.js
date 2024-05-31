@@ -45,6 +45,15 @@ app.patch("/items/:name", function(request, response) {
     return response.json({updated : item})
 })
 
+app.delete("/items/:name", function(request, response) {
+    const item = items.find(item => item.name === request.params.name)
+    const idx = items.indexOf(item)
+    if (idx<0) {throw new ExpressError("Not found", 404)}
+    
+    items.splice(idx,1)
+    return response.json({message: "Deleted"})
+})
+
 /**
  * 
  * ERROR HANDLERS
