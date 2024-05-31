@@ -33,3 +33,11 @@ describe("POST /items", function(){
         expect(resp.body).toEqual({added: vanilla})
     })
 })
+
+describe("GET /items/:name", function() {
+    test("Gets a single item", async function() {
+        const resp = await request(router).get(`/items/${mcn.name}`)
+        expect(resp.statusCode).toBe(200);
+        expect(resp.body).toEqual(mcn)
+    })
+})
