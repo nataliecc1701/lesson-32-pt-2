@@ -1,11 +1,4 @@
-const express = require("express")
-const router = require("./router")
-const ExpressError = require("./error")
-
-const app = express()
-
-app.use("/items", router)
-
+const app = require("./router")
 
 /**
  * 

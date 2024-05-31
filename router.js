@@ -2,7 +2,7 @@ const express = require("express")
 const items = require("./fakeDb")
 const ExpressError = require("./error")
 
-router = express.Router()
+router = express()
 
 router.use(express.json())
 
@@ -12,11 +12,11 @@ router.use(express.json())
  * 
  */
 
-router.get("/", function(request,response) {
-    return response.json(items)
+router.get("/items", function(request,response) {
+    return response.json({items})
 })
 
-router.post("/", function(request,response) {
+router.post("/items", function(request,response) {
     if (request.body && request.body.name && request.body.price) {
         const { name, price } = request.body
         const newItem = { name, price } // extract these and only these from request.body
@@ -28,14 +28,14 @@ router.post("/", function(request,response) {
     }
 })
 
-router.get("/:name", function(request, response) {
+router.get("/items/:name", function(request, response) {
     const item = items.find(item => item.name === request.params.name)
     if (!item) throw new ExpressError("Not found", 404)
         
     return response.json(item)
 })
 
-router.patch("/:name", function(request, response) {
+router.patch("/items/:name", function(request, response) {
     const item = items.find(item => item.name === request.params.name)
     if (!item) {throw new ExpressError("Not found", 404)}
     
@@ -45,7 +45,7 @@ router.patch("/:name", function(request, response) {
     return response.json({updated : item})
 })
 
-router.delete("/:name", function(request, response) {
+router.delete("/items/:name", function(request, response) {
     const item = items.find(item => item.name === request.params.name)
     const idx = items.indexOf(item)
     if (!item) {throw new ExpressError("Not found", 404)}
